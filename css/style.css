@@ -1,3 +1,48 @@
 body {
-    text-align: center;
+  text-align: center;
+}
+
+/* Modal Div */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content div */
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  width: 80%;
+  text-align: center;
+  background: #2e3d49;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+}
+
+/* Modal Close Button */
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 25px;
+  font-weight: bold;
+  float: right;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
 }

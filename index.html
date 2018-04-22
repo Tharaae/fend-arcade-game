@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Effective JavaScript: Frogger</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <title>Effective JavaScript: Frogger</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <script src="js/resources.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/engine.js"></script>
+
+<body>  
+  <!-- Win Greeting Modal -->
+  <div id="win-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="close">×</span>
+      <h2>Congratulations!</h2>
+      <h3>You won, Good Job :)</h3>
+      <p>Do you wish to play again?</p>
+      <button id="yes-play">Yes</button>
+      <button id="no-play">No</button>
+    </div>
+    <!-- TODO: add Share functionality (different links/icons to share score on social networks) -->
+  </div>
+
+  <script src="js/resources.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/engine.js"></script>
 </body>
+
 </html>
