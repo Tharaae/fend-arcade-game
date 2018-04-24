@@ -1,6 +1,9 @@
 // Enemies/Bugs our player must avoid
 class Enemy {
-  constructor() {
+  constructor(level = 1) {
+    // the difficulty level of the enemy 1, 2 or 3
+    this.difficulty = level;
+
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -11,8 +14,8 @@ class Enemy {
     // Random stone row number from 1-3, used to caluclate y position
     this.row = Math.floor(Math.random() * 3 + 1);
 
-    // Random bug/enemy speed from 1-3
-    this.speedX = Math.floor(Math.random() * 3 + 1);
+    // Random bug/enemy speed from 2, 4 or 6 accordong to difficaulty level
+    this.speedX = Math.floor(Math.random() * 3 + (level * 2));
   }
 
   // Update the enemy's position, required method for game
@@ -35,18 +38,23 @@ class Enemy {
 // This class requires an update(), render() and
 // a handleInput() method.
 class Player {
-  constructor() {
+  constructor(charImage = 'images/char-boy.png') {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     // The image/sprite for our player, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/char-boy.png';
+    this.sprite = charImage;
     // the initial column of Player (middle column)
     this.col = 2;
     // the initial row of Player (bottom grass row)
     this.row = 5;
     // won flag
     this.won = false;
+  }
+
+  /* Select new player character */
+  setCharacter(charImage) {
+    this.sprite = charImage;
   }
 
   /* Update the Player's position, required method for game */
@@ -63,7 +71,7 @@ class Player {
     });
   }
 
-  // Draw the enemy on the screen, required method for game
+  // Draw the Player on the screen, required method for game
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.col * 101, this.row * 83);
   }
@@ -88,21 +96,23 @@ class Player {
 
   /* Handle keyboard input */
   handleInput(pressedKey) {
-    switch (pressedKey) {
-      case 'left':
-        this.col = this.col > 0 ? this.col - 1 : 0;
-        break;
-      case 'right':
-        this.col = this.col < 4 ? this.col + 1 : 4;
-        break;
-      case 'up':
-        this.row = this.row > 0 ? this.row - 1 : 0;
-        if(this.row == 0) {
-          this.wins();
-        }
-        break;
-      case 'down':
-        this.row = this.row < 5 ? this.row + 1 : 5;
+    if (this.row > 0) {
+      switch (pressedKey) {
+        case 'left':
+          this.col = this.col > 0 ? this.col - 1 : 0;
+          break;
+        case 'right':
+          this.col = this.col < 4 ? this.col + 1 : 4;
+          break;
+        case 'up':
+          this.row = this.row > 0 ? this.row - 1 : 0;
+          if (this.row == 0) {
+            this.wins();
+          }
+          break;
+        case 'down':
+          this.row = this.row < 5 ? this.row + 1 : 5;
+      }
     }
   }
 
@@ -110,16 +120,24 @@ class Player {
   wins() {
     // flag as won
     this.won = true;
+    announceWinning();
   }
 
   /* reset player setting for a new game or restart */
   reset() {
-      this.col = 2;
-      this.row = 5;
-      this.won = false;
+    this.col = 2;
+    this.row = 5;
+    this.won = false;
   }
 }
 
+/* Display Winning Greeting */
+function announceWinning() {
+  // display greeting madal after 1 sec
+  setTimeout(function() {
+    document.getElementById("win-modal").style.display = "block";
+  }, 1000);
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -140,44 +158,4 @@ document.addEventListener('keyup', function(e) {
 
   // move according to pressed key
   player.handleInput(allowedKeys[e.keyCode]);
-
-  // if player won, reset game
-  if(player.won) {
-
-    let winModal = document.getElementById("win-modal");
-
-    // When the user clicks on <span> (x), close the modal
-    document.getElementById("close").onclick = function() {
-      winModal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close the modal
-    window.onclick = function(event) {
-      if (event.target == winModal) {
-        winModal.style.display = "none";
-      }
-    }
-
-    // When the user clicks on No (don't want to play again), clost the modal
-    document.getElementById("no-play").onclick = function() {
-      winModal.style.display = "none";
-    }
-
-    // When the user clicks on Yes (want to play again), close the modal and restart a new game
-    document.getElementById("yes-play").onclick = function() {
-      winModal.style.display = "none";
-
-      // empty enemies array
-      for(let i=0; i < allEnemies.length; i++) {
-         allEnemies.pop();
-      }
-      // reset player's settings
-      player.reset();
-    }
-
-    // display greeting madal after 1 sec
-    setTimeout(function() {
-      winModal.style.display = "block";
-    }, 1000);
-  }
 });

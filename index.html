@@ -1,13 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <title>Effective JavaScript: Frogger</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>  
+<body>
+  <!-- Settings sidebar div -->
+  <div class="sidebar" id="sidebar" tabIndex="-1">
+    <span class="close" id="close-settings">×</span>
+    <h2>Select Palyer</h2>
+    <div id="chars-div">
+      <div class="char selected" id="boy">
+        <img src="images/char-boy.png" alt="boy character">
+      </div>
+      <div class="char" id="cat-girl">
+        <img src="images/char-cat-girl.png" alt="cat girl character">
+      </div>
+      <div class="char" id="horn-girl">
+        <img src="images/char-horn-girl.png" alt="cat horn character">
+      </div>
+      <div class="char" id="pink-girl">
+        <img src="images/char-pink-girl.png" alt="cat pink character">
+      </div>
+      <div class="char" id="princess-girl">
+        <img src="images/char-princess-girl.png" alt="cat princess character">
+      </div>
+    </div>
+    <h2>Select Level</h2>
+    <div id="levels-div">
+      <div class="level selected" id="1">1</div>
+      <div class="level" id="2">2</div>
+      <div class="level" id="3">3</div>
+    </div>
+    <button id="restart">Restart Game</button>
+  </div>
+
+  <!-- Open Settings sidebar button -->
+  <h2><span class="open-sidebar" id="open-sidebar">&#9776; Open Settings</span></h2>
+
   <!-- Win Greeting Modal -->
   <div id="win-modal" class="modal">
     <div class="modal-content">
@@ -18,6 +52,7 @@
       <button id="yes-play">Yes</button>
       <button id="no-play">No</button>
     </div>
+    <!-- TODO: disply score and time to finish -->
     <!-- TODO: add Share functionality (different links/icons to share score on social networks) -->
   </div>
 

@@ -24,6 +24,33 @@ var Engine = (function(global) {
     ctx = canvas.getContext('2d'),
     lastTime;
 
+  // object to handle game difficulty properties and methods
+  const difficulty = {
+    level: 1,
+    minGap: 100,
+    maxGap: 300,
+    change: function(newLevel) { // method to change difficaulty level
+      this.level = newLevel;
+      // Set min and max gap between enemies according to difficulty level
+      // - from 100-300 at Level 1
+      // - from 80-220 at level 2
+      // - from 50-150 at level 3
+      switch (newLevel) {
+        case 1:
+          this.minGap = 100;
+          this.maxGap = 300;
+          break;
+        case 2:
+          this.minGap = 80;
+          this.maxGap = 220;
+          break;
+        case 3:
+          this.minGap = 50;
+          this.maxGap = 150;
+      }
+    }
+  };
+
   canvas.width = 505;
   canvas.height = 606;
   doc.body.appendChild(canvas);
@@ -63,7 +90,6 @@ var Engine = (function(global) {
      * function again as soon as the browser is able to draw another frame.
      */
     win.requestAnimationFrame(main);
-
   }
 
   /* This function does some initial setup that should only occur once,
@@ -71,6 +97,7 @@ var Engine = (function(global) {
    * game loop.
    */
   function init() {
+    prepareSettingsPanel();
     reset();
     lastTime = Date.now();
     main();
@@ -88,9 +115,10 @@ var Engine = (function(global) {
   function update(dt) {
     // get current number of enemies
     const enemiesCount = allEnemies.length;
-    // if no enemies are created yet or the newest enemy is at a random distance from 100-250
-    if (enemiesCount == 0 || allEnemies[enemiesCount - 1].x > Math.floor(Math.random() * 200 + 100)) {
-      allEnemies.push(new Enemy());
+    // if no enemies are created yet or the newest enemy is at a random distance according to difficulty level
+    if (enemiesCount == 0 || allEnemies[enemiesCount - 1].x > Math.floor(Math.random() * (difficulty.maxGap - difficulty.minGap) + difficulty.minGap)) {
+      // Create new enemy at the selected difficulty level
+      allEnemies.push(new Enemy(difficulty.level));
     }
     updateEntities(dt);
   }
@@ -103,14 +131,14 @@ var Engine = (function(global) {
    * render methods.
    */
   function updateEntities(dt) {
-    // initiate array to hold indeces of Enemies out of canvas
+    // initiate array to hold indeces of Enemies out of canvas to be deleted
     const enemiesOut = [];
 
     // iterate on Enemies
     allEnemies.forEach(function(enemy, index) {
       // if out of canvas
-      if (enemy.x > canvas.width + 101) {
-        // stre index to be deleted later
+      if (enemy.x > canvas.width + 300) {
+        // store index to be deleted later
         enemiesOut.push(index);
       } else {
         // update Enemy position
@@ -163,12 +191,12 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83 + 15);
       }
     }
+
     // Draw components
     renderEntities();
 
     // update Player postion in case of collision or winning
     player.update();
-
   }
 
   /* This function is called by the render function and is called on each game
@@ -186,12 +214,97 @@ var Engine = (function(global) {
     player.render();
   }
 
-  /* This function does nothing but it could have been a good place to
+  /* This function could have been a good place to
    * handle game reset states - maybe a new game menu or a game over screen
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
-    // noop
+    // empty enemies array
+    allEnemies.splice(0, allEnemies.length);
+
+    // reset player's settings
+    player.reset();
+  }
+
+  /* Prepare Setting Panel functionalities */
+  function prepareSettingsPanel() {
+    // When the user clicks on x to close settings sidebar
+    document.getElementById("close-settings").onclick = function() {
+      document.getElementById("sidebar").style.left = '-320px';
+    }
+
+    // When the user clicks on Open Settings to open settings sidebar
+    document.getElementById("open-sidebar").onclick = function() {
+      document.getElementById("sidebar").style.left = '0';
+    }
+
+    // Character Selection funstionality
+    document.getElementById('chars-div').querySelectorAll('.char').forEach(function(char) {
+      // on clicking on a charater
+      char.onclick = (event) => {
+        // get previously selected character
+        const selectedChar = document.getElementById('chars-div').querySelector('.char.selected');
+
+        // get newly selected character
+        const newChar = event.target;
+
+        if (newChar != selectedChar) {
+          selectedChar.className = 'char';
+          newChar.className = 'char selected';
+          const srcFile = newChar.src;
+          player.setCharacter(srcFile.slice(srcFile.indexOf('images')));
+        }
+      }
+    });
+
+    // Level Selection functionality
+    document.getElementById('levels-div').querySelectorAll('.level').forEach(function(level) {
+      // on clicking on a Level
+      level.onclick = (event) => {
+        // get previously selected level element
+        const previousLevelElement = document.getElementById('levels-div').querySelector('.level.selected');
+        // get newly selected level
+        const newLevel = parseInt(event.target.id, 10);
+
+        // if new level is different than that already assigned
+        if (newLevel != difficulty.level) {
+          previousLevelElement.className = 'level';
+          event.target.className = 'level selected';
+          difficulty.change(newLevel);
+        }
+      }
+    });
+
+    // Restart Game button funstionality
+    document.getElementById("restart").onclick = function() {
+      reset();
+    }
+
+    // get winning modal div
+    const winModal = document.getElementById("win-modal");
+
+    // When the user clicks on <span> (x), close the modal
+    document.getElementById("close").onclick = function() {
+      winModal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close the modal
+    window.onclick = function(event) {
+      if (event.target == winModal) {
+        winModal.style.display = "none";
+      }
+    }
+
+    // When the user clicks on No (don't want to play again), clost the modal
+    document.getElementById("no-play").onclick = function() {
+      winModal.style.display = "none";
+    }
+
+    // When the user clicks on Yes (want to play again), close the modal and restart a new game
+    document.getElementById("yes-play").onclick = function() {
+      winModal.style.display = "none";
+      reset();
+    }
   }
 
   /* Go ahead and load all of the images we know we're going to need to
@@ -203,7 +316,11 @@ var Engine = (function(global) {
     'images/water-block.png',
     'images/grass-block.png',
     'images/enemy-bug.png',
-    'images/char-boy.png'
+    'images/char-boy.png',
+    'images/char-cat-girl.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'
   ]);
   Resources.onReady(init);
 

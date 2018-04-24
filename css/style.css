@@ -1,8 +1,103 @@
 body {
   text-align: center;
+  font-family: 'Coda', cursive;
+}
+
+button {
+  background-color: #ccc;
+  color: #2e3d49;
+  border: solid;
+  border-width: 1px;
+  border-color: #bbb;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+button:focus,
+.sidebar:focus {
+  outline: none;
+}
+
+/* Open Settings Sidebar button */
+
+.open-sidebar {
+  color: #2e3d49;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.open-sidebar:hover {
+  text-shadow: 4px 4px 8px rgba(150, 150, 150, 1);
+}
+
+/* Settings Sidebar Div */
+
+.sidebar {
+  width: 310px;
+  min-height: 100%;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #2e3d49;
+  color: #fff;
+  border-radius: 8px;
+  transition: 0.5s;
+}
+
+#chars-div,
+#levels-div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Player Characters div */
+
+.char {
+  width: 101px;
+  height: 171px;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.char.selected {
+  background-image: url('../images/Selector.png');
+  cursor: default;
+}
+
+/* Levels div */
+
+.level {
+  width: 90px;
+  height: 90px;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  font-size: 36px;
+  padding-top: 20px;
+}
+
+.level.selected {
+  background-image: url('../images/Star-square.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: default;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
 }
 
 /* Modal Div */
+
 .modal {
   display: none;
   position: fixed;
@@ -29,7 +124,7 @@ body {
   box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
 
-/* Modal Close Button */
+/* Modal/Sidebar Close Button */
 
 .close {
   color: #aaa;
@@ -38,6 +133,7 @@ body {
   font-weight: bold;
   float: right;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .close:hover,
