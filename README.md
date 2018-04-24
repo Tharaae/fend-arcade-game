@@ -7,7 +7,7 @@ This project is an implementation of the basic Classic Arcade game functionality
 
 **The game steps and functionalities are as follows:**
 
-- To start the game, run the index.html file in the browser.
+- To start the game, run the index.html file in the browser. You may also use [this link](https://cdn.rawgit.com/Tharaae/fend-arcade-game/c4c099cb/index.html).
 - In this game you have a Player and Enemies (Bugs).
 - The goal of the player is to reach the water, without colliding into any one of the enemies.
 - The player can move left, right, up and down using keyboard arrows.
