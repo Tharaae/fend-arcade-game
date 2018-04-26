@@ -1,18 +1,40 @@
-// Enemies/Bugs our player must avoid
-class Enemy {
-  constructor(level = 1) {
-    // the difficulty level of the enemy 1, 2 or 3
-    this.difficulty = level;
+// Common Game component to be extended by Player and Enemies
+class GameComponent {
+  constructor(image, gridRow, xPosition) {
+    // game component image
+    this.sprite = image;
+    // game component grid row
+    this.row = gridRow;
+    // game component x position in canvas
+    this.x = xPosition;
+    // game component y position in canvas
+    this.y = gridRow * 83;
+  }
 
+  // draw game component in its position in canvas
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
+}
+
+// Enemies/Bugs our player must avoid
+class Enemy extends GameComponent{
+  constructor(level = 1) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    const image = 'images/enemy-bug.png';
 
-    // the initial x position of Bug/Enemy
-    this.x = -101;
+    // the initial x position of Bug/Enemy (at the left of the canvas)
+    const xPosition = -101;
 
-    // Random stone row number from 1-3, used to caluclate y position
-    this.row = Math.floor(Math.random() * 3 + 1);
+    // Random enemy row number from 1-3, used to caluclate y position
+    const row = Math.floor(Math.random() * 3 + 1);
+
+    // construct Game Component for the Enemey
+    super(image, row, xPosition);
+
+    // the difficulty level of the enemy 1, 2 or 3
+    this.difficulty = level;
 
     // Random bug/enemy speed from 2, 4 or 6 accordong to difficaulty level
     this.speedX = Math.floor(Math.random() * 3 + (level * 2));
@@ -27,29 +49,31 @@ class Enemy {
       this.x += this.speedX;
     }
   }
-
-  // Draw the enemy on the screen, required method for game
-  render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.row * 83);
-  }
 }
 
-// Now write your own player class
+// Player class
 // This class requires an update(), render() and
 // a handleInput() method.
-class Player {
+class Player extends GameComponent {
   constructor(charImage = 'images/char-boy.png') {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    // The image/sprite for our player, this uses
-    // a helper we've provided to easily load images
-    this.sprite = charImage;
+    // initial grid position
+    const initCol = 2;
+    const initRow = 5;
+
+    // construct Game Component for the Player
+    super(charImage, initRow, initCol * 101);
+
     // the initial column of Player (middle column)
-    this.col = 2;
-    // the initial row of Player (bottom grass row)
-    this.row = 5;
+    this.col = initCol;
     // won flag
     this.won = false;
+  }
+
+  // set player position
+  setXYPosition() {
+    // set x and y position according to current grid position
+    this.x = this.col * 101;
+    this.y = this.row * 83;
   }
 
   /* Select new player character */
@@ -66,14 +90,10 @@ class Player {
         // if collides, reset Player position
         this.col = 2;
         this.row = 4;
+        this.setXYPosition();
         return;
       }
     });
-  }
-
-  // Draw the Player on the screen, required method for game
-  render() {
-    ctx.drawImage(Resources.get(this.sprite), this.col * 101, this.row * 83);
   }
 
   // Check if Player collides with Ememy
@@ -81,7 +101,7 @@ class Player {
     // if both components on same rows
     if (this.row == enemy.row) {
       // get x edges positions of both components
-      const playerLeft = this.col * 101 + 20;
+      const playerLeft = this.x + 20;
       const playerRight = playerLeft + 70;
       const enemyLeft = enemy.x;
       const enemyRight = enemyLeft + 101;
@@ -114,6 +134,7 @@ class Player {
           this.row = this.row < 5 ? this.row + 1 : 5;
       }
     }
+    this.setXYPosition();
   }
 
   /* Congratulate on winning and flag as winning */
@@ -127,6 +148,7 @@ class Player {
   reset() {
     this.col = 2;
     this.row = 5;
+    this.setXYPosition();
     this.won = false;
   }
 }

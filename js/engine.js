@@ -160,27 +160,26 @@ var Engine = (function(global) {
     /* This array holds the relative URL to the image used
      * for that particular row of the game level.
      */
-    var rowImages = [
+    const rowImages = [
         'images/water-block.png', // Top row is water
         'images/stone-block.png', // Row 1 of 3 of stone
         'images/stone-block.png', // Row 2 of 3 of stone
         'images/stone-block.png', // Row 3 of 3 of stone
         'images/grass-block.png', // Row 1 of 2 of grass
         'images/grass-block.png' // Row 2 of 2 of grass
-      ],
-      numRows = 6,
-      numCols = 5,
-      row, col;
+      ];
+    const numRows = 6;
+    const numCols = 5;
 
     // Before drawing, clear existing canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     /* Loop through the number of rows and columns we've defined above
      * and, using the rowImages array, draw the correct image for that
      * portion of the "grid"
      */
-    for (row = 0; row < numRows; row++) {
-      for (col = 0; col < numCols; col++) {
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
         /* The drawImage function of the canvas' context element
          * requires 3 parameters: the image to draw, the x coordinate
          * to start drawing and the y coordinate to start drawing.
@@ -231,12 +230,12 @@ var Engine = (function(global) {
     // When the user clicks on x to close settings sidebar
     document.getElementById("close-settings").onclick = function() {
       document.getElementById("sidebar").style.left = '-320px';
-    }
+    };
 
     // When the user clicks on Open Settings to open settings sidebar
     document.getElementById("open-sidebar").onclick = function() {
       document.getElementById("sidebar").style.left = '0';
-    }
+    };
 
     // Character Selection funstionality
     document.getElementById('chars-div').querySelectorAll('.char').forEach(function(char) {
@@ -254,7 +253,7 @@ var Engine = (function(global) {
           const srcFile = newChar.src;
           player.setCharacter(srcFile.slice(srcFile.indexOf('images')));
         }
-      }
+      };
     });
 
     // Level Selection functionality
@@ -272,13 +271,13 @@ var Engine = (function(global) {
           event.target.className = 'level selected';
           difficulty.change(newLevel);
         }
-      }
+      };
     });
 
     // Restart Game button funstionality
     document.getElementById("restart").onclick = function() {
       reset();
-    }
+    };
 
     // get winning modal div
     const winModal = document.getElementById("win-modal");
@@ -286,25 +285,25 @@ var Engine = (function(global) {
     // When the user clicks on <span> (x), close the modal
     document.getElementById("close").onclick = function() {
       winModal.style.display = "none";
-    }
+    };
 
     // When the user clicks anywhere outside of the modal, close the modal
     window.onclick = function(event) {
       if (event.target == winModal) {
         winModal.style.display = "none";
       }
-    }
+    };
 
     // When the user clicks on No (don't want to play again), clost the modal
     document.getElementById("no-play").onclick = function() {
       winModal.style.display = "none";
-    }
+    };
 
     // When the user clicks on Yes (want to play again), close the modal and restart a new game
     document.getElementById("yes-play").onclick = function() {
       winModal.style.display = "none";
       reset();
-    }
+    };
   }
 
   /* Go ahead and load all of the images we know we're going to need to
